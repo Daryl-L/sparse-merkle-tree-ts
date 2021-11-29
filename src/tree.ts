@@ -1,3 +1,5 @@
+import Blake2b from "blake2b-wasm";
+
 class BranchNode {
     left: IMergeValue;
     right: IMergeValue;
@@ -22,7 +24,7 @@ class BranchKey {
     }
 }
 
-class SparseMerkleTree<H, V extends H256, S extends Store<V>> {
+class SparseMerkleTree<H extends IHash, V extends H256, S extends Store<V>> {
     private store: S;
     private root: H256;
 
@@ -76,7 +78,7 @@ class SparseMerkleTree<H, V extends H256, S extends Store<V>> {
             this.store.insert_branch(parent_branch_key, parent_branch_node);
 
             current_key = parent_branch_key.key;
-            current_node = MergeValue.merge<H>(parent_branch_node.left, parent_branch_node.right);
+            current_node = MergeValue.merge<H>(height, current_key, parent_branch_node.left, parent_branch_node.right, new Blake2b());
         }
 
         return this.root;

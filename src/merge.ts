@@ -3,20 +3,33 @@ interface IMergeValue {
     is_zero(): boolean;
 }
 
-abstract class MergeValue implements IMergeValue {
+abstract class MergeValue<H extends IHash> implements IMergeValue {
     abstract hash(): H256;
     abstract is_zero(): boolean;
+
+    private hasher: H;
 
     static from_h256(v: H256) : IMergeValue {
         return new MergeValueNormal(v)
     }
 
-    static merge<H>(left: MergeValue, right: MergeValue) : IMergeValue {
-        throw new Error("Method not implemented.");
+    static merge<H extends IHash>(
+        height: u8,
+        node_key: H256,
+        left: MergeValue<H>, 
+        right: MergeValue<H>, 
+        hasher: H
+    ) : IMergeValue {
+        hasher.update(new H256([height]));
+        hasher.update(node_key);
+        hasher.update(left.hash());
+        hasher.update(right.hash())
+
+        return MergeValue.from_h256(hasher.final());
     }
 }
 
-class MergeValueNormal extends MergeValue {
+class MergeValueNormal<H extends IHash> extends MergeValue<H> {
     private value: H256
 
     constructor(value: H256) {
@@ -28,10 +41,14 @@ class MergeValueNormal extends MergeValue {
     public hash(): H256 {
         return this.value;
     }
-}
 
-class MergeValueZero extends MergeValue {
-    hash(): H256 {
-        throw new Error("Method not implemented.");
+    public is_zero(): boolean {
+        return this.value.is_zero();
     }
 }
+
+// class MergeValueZero extends MergeValue {
+//     hash(): H256 {
+//         throw new Error("Method not implemented.");
+//     }
+// }
