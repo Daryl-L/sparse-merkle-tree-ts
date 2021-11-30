@@ -2,28 +2,88 @@
 # yarn lockfile v1
 
 
-b4a@^1.0.1:
-  version "1.1.4"
-  resolved "https://registry.npmmirror.com/b4a/download/b4a-1.1.4.tgz#1fb4a659d2958d2f6929d1e257389f637f94b3ef"
-  integrity sha512-RIWJsXR22BtG5X15f+MrM9QT3JDTpTKj58Gsuaudeh6Nc8eaNSZxiAwABjiC9tiHwXKSTu7NIBH0zB3kYa0BvA==
-
-blake2b-wasm@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.npmmirror.com/blake2b-wasm/download/blake2b-wasm-2.4.0.tgz#9115649111edbbd87eb24ce7c04b427e4e2be5be"
-  integrity sha512-S1kwmW2ZhZFFFOghcx73+ZajEfKBqhP82JMssxtLVMxlaPea1p9uoLiUZ5WYyHn0KddwbLc+0vh4wR0KBNoT5w==
+"@nervosnetwork/ckb-sdk-utils@^0.101.0":
+  version "0.101.0"
+  resolved "https://registry.npmmirror.com/@nervosnetwork/ckb-sdk-utils/download/@nervosnetwork/ckb-sdk-utils-0.101.0.tgz#f51b6dc6df9299544217984c2c3e29e09d050c60"
+  integrity sha1-9Rttxt+SmVRCF5hMLD4p4J0FDGA=
   dependencies:
-    b4a "^1.0.1"
-    nanoassert "^2.0.0"
+    "@nervosnetwork/ckb-types" "0.101.0"
+    bech32 "2.0.0"
+    elliptic "6.5.4"
+    jsbi "3.1.3"
+    tslib "2.3.1"
 
-blake2b@^2.1.4:
-  version "2.1.4"
-  resolved "https://registry.npmmirror.com/blake2b/download/blake2b-2.1.4.tgz#817d278526ddb4cd673bfb1af16d1ad61e393ba3"
-  integrity sha512-AyBuuJNI64gIvwx13qiICz6H6hpmjvYS5DGkG6jbXMOT8Z3WUJ3V1X0FlhIoT1b/5JtHE3ki+xjtMvu1nn+t9A==
-  dependencies:
-    blake2b-wasm "^2.4.0"
-    nanoassert "^2.0.0"
+"@nervosnetwork/ckb-types@0.101.0":
+  version "0.101.0"
+  resolved "https://registry.npmmirror.com/@nervosnetwork/ckb-types/download/@nervosnetwork/ckb-types-0.101.0.tgz#84c5f590bd8e2e06fdf56bab0c09995da0ada4ca"
+  integrity sha1-hMX1kL2OLgb99WurDAmZXaCtpMo=
 
-nanoassert@^2.0.0:
+bech32@2.0.0:
   version "2.0.0"
-  resolved "https://registry.nlark.com/nanoassert/download/nanoassert-2.0.0.tgz#a05f86de6c7a51618038a620f88878ed1e490c09"
-  integrity sha1-oF+G3mx6UWGAOKYg+Ih47R5JDAk=
+  resolved "https://registry.nlark.com/bech32/download/bech32-2.0.0.tgz#078d3686535075c8c79709f054b1b226a133b355"
+  integrity sha1-B402hlNQdcjHlwnwVLGyJqEzs1U=
+
+bn.js@^4.11.9:
+  version "4.12.0"
+  resolved "https://registry.nlark.com/bn.js/download/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
+  integrity sha1-d1s/J477uXGO7HNh9IP7Nvu/6og=
+
+brorand@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.nlark.com/brorand/download/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
+  integrity sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=
+
+elliptic@6.5.4:
+  version "6.5.4"
+  resolved "https://registry.nlark.com/elliptic/download/elliptic-6.5.4.tgz#da37cebd31e79a1367e941b592ed1fbebd58abbb"
+  integrity sha1-2jfOvTHnmhNn6UG1ku0fvr1Yq7s=
+  dependencies:
+    bn.js "^4.11.9"
+    brorand "^1.1.0"
+    hash.js "^1.0.0"
+    hmac-drbg "^1.0.1"
+    inherits "^2.0.4"
+    minimalistic-assert "^1.0.1"
+    minimalistic-crypto-utils "^1.0.1"
+
+hash.js@^1.0.0, hash.js@^1.0.3:
+  version "1.1.7"
+  resolved "https://registry.nlark.com/hash.js/download/hash.js-1.1.7.tgz#0babca538e8d4ee4a0f8988d68866537a003cf42"
+  integrity sha1-C6vKU46NTuSg+JiNaIZlN6ADz0I=
+  dependencies:
+    inherits "^2.0.3"
+    minimalistic-assert "^1.0.1"
+
+hmac-drbg@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.nlark.com/hmac-drbg/download/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
+  integrity sha1-0nRXAQJabHdabFRXk+1QL8DGSaE=
+  dependencies:
+    hash.js "^1.0.3"
+    minimalistic-assert "^1.0.0"
+    minimalistic-crypto-utils "^1.0.1"
+
+inherits@^2.0.3, inherits@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.nlark.com/inherits/download/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
+  integrity sha1-D6LGT5MpF8NDOg3tVTY6rjdBa3w=
+
+jsbi@3.1.3:
+  version "3.1.3"
+  resolved "https://registry.npmmirror.com/jsbi/download/jsbi-3.1.3.tgz#f024b340032f7c7caaa6ca4b32b55e8d33f6e897"
+  integrity sha1-8CSzQAMvfHyqpspLMrVejTP26Jc=
+
+minimalistic-assert@^1.0.0, minimalistic-assert@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.nlark.com/minimalistic-assert/download/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
+  integrity sha1-LhlN4ERibUoQ5/f7wAznPoPk1cc=
+
+minimalistic-crypto-utils@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.nlark.com/minimalistic-crypto-utils/download/minimalistic-crypto-utils-1.0.1.tgz#f6c00c1c0b082246e5c4d99dfb8c7c083b2b582a"
+  integrity sha1-9sAMHAsIIkblxNmd+4x8CDsrWCo=
+
+tslib@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.nlark.com/tslib/download/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha1-6KM1rdXOrlGqJh0ypJAVjvBC7wE=

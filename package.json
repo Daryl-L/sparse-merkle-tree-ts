@@ -6,7 +6,7 @@
   "author": "daryl",
   "license": "MIT",
   "dependencies": {
-    "blake2b": "^2.1.4"
+    "@nervosnetwork/ckb-sdk-utils": "^0.101.0"
   },
   "gypfile": true,
   "compilerOptions": {
