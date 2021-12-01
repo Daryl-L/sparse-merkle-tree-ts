@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "system",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "moduleResolution": "Node",
+    "outFile": "../../built/local/tsc.js",
+    "sourceMap": true,
+    "target": "ES2016",
+    "esModuleInterop": true,
+    "types": [
+      "mocha"
+    ]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

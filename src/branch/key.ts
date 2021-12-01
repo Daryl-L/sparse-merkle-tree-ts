@@ -1,3 +1,6 @@
+import { H256 } from "../h256";
+import { u8 } from "../u8";
+
 export class BranchKey {
   key: H256;
   height: u8;

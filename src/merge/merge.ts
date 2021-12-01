@@ -1,9 +1,12 @@
-interface MergeValue {
+import { H256 } from "../h256";
+import { u8 } from "../u8";
+
+export interface MergeValue {
     hash(): H256;
     is_zero(): boolean;
 }
 
-class MergeValueNormal implements MergeValue {
+export class MergeValueNormal implements MergeValue {
     value: H256
 
     constructor(value: H256) {
@@ -19,7 +22,7 @@ class MergeValueNormal implements MergeValue {
     }
 }
 
-class MergeValueZero implements MergeValue {
+export class MergeValueWithZero implements MergeValue {
     base_node: H256;
     zero_bits: H256;
     zero_count: u8;
@@ -29,6 +32,6 @@ class MergeValueZero implements MergeValue {
     }
 
     is_zero(): boolean {
-        throw new Error("Method not implemented.");
+        return true;
     }
 }

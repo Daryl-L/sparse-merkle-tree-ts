@@ -2,10 +2,19 @@ import { BranchKey } from "./branch/key";
 import { BYTE_NUMBER, MAX_HEIGHT } from "./const";
 import { from_h256, merge } from "./merge/util";
 import { Store } from "./store/store";
+import { u8 } from "./u8";
+import { H256 } from "./h256";
+import { DefaultStore } from "./store/default_store";
+import { BranchNode } from "./branch/node";
 
 class SparseMerkleTree {
-  private store: Store;
-  private root: H256;
+  store: Store;
+  root: H256;
+
+  constructor() {
+      this.store = new DefaultStore;
+      this.root = new H256(BYTE_NUMBER);
+  }
 
 
   /**
@@ -25,7 +34,7 @@ class SparseMerkleTree {
    * @returns H256
    */
   update(key: H256, value: H256): H256 {
-    if (value.is_zero()) {
+    if (!value.is_zero()) {
       this.store.insert_leaf(key, value);
     } else {
       this.store.remove_leaf(key);
@@ -47,14 +56,18 @@ class SparseMerkleTree {
           parent_branch_node.right = current_node;
         }
       } else if (current_key.is_right(height as u8)) {
-        parent_branch_node.right = current_node;
-        parent_branch_node.left = from_h256(new H256(BYTE_NUMBER));
+        parent_branch_node = new BranchNode(
+          from_h256(H256.zero()),
+          current_node,
+        )
       } else {
-        parent_branch_node.left = current_node;
-        parent_branch_node.right = from_h256(new H256(BYTE_NUMBER));
+        parent_branch_node = new BranchNode(
+          current_node,
+          from_h256(H256.zero()),
+        )
       }
 
-      if (parent_branch_node.left.is_zero() || parent_branch_node.right.is_zero()) {
+      if (parent_branch_node.left.is_zero() && parent_branch_node.right.is_zero()) {
         this.store.remove_branch(parent_branch_key);
       } else {
         this.store.insert_branch(parent_branch_key, parent_branch_node);
@@ -75,3 +88,5 @@ class SparseMerkleTree {
     return this.root;
   }
 }
+
+export default SparseMerkleTree;

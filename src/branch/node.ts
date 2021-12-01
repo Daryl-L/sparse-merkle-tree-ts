@@ -1,3 +1,5 @@
+import { MergeValue } from "../merge/merge";
+
 export class BranchNode {
   left: MergeValue;
   right: MergeValue;
