@@ -51,9 +51,9 @@ class SparseMerkleTree {
       let parent_branch_node = this.store.get_branch(parent_branch_key);
       if (parent_branch_node != null) {
         if (current_key.is_right(height as u8)) {
-          parent_branch_node.left = current_node;
-        } else {
           parent_branch_node.right = current_node;
+        } else {
+          parent_branch_node.left = current_node;
         }
       } else if (current_key.is_right(height as u8)) {
         parent_branch_node = new BranchNode(
@@ -76,7 +76,6 @@ class SparseMerkleTree {
       current_key = parent_branch_key.key;
       current_node = merge(height as u8, current_key, parent_branch_node.left, parent_branch_node.right);
     }
-
     this.root = current_node.hash();
 
     return this.root;

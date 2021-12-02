@@ -1,5 +1,8 @@
+import blake2b from "@nervosnetwork/ckb-sdk-utils/lib/crypto/blake2b";
+import { PERSONAL } from '../const';
 import { H256 } from "../h256";
 import { u8 } from "../u8";
+import { MergeType } from './const';
 
 export interface MergeValue {
     hash(): H256;
@@ -28,10 +31,16 @@ export class MergeValueWithZero implements MergeValue {
     zero_count: u8;
 
     hash(): H256 {
-        throw new Error("Method not implemented.");
+        let hasher = blake2b(32, null, null, PERSONAL);
+        hasher.update(new H256([MergeType.MergeWithZero]));
+        hasher.update(new H256(this.base_node));
+        hasher.update(new H256(this.zero_bits));
+        hasher.update(new H256([this.zero_count]));
+
+        return new H256(hasher.final('binary') as Uint8Array);
     }
 
     is_zero(): boolean {
-        return true;
+        return false;
     }
 }

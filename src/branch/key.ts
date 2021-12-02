@@ -10,7 +10,11 @@ export class BranchKey {
     this.height = height;
   }
 
-  public is_right(height: u8): boolean {
+  is_right(height: u8): boolean {
     return this.key.is_right(height);
   }
+
+  toString(): string {
+    return this.key.toString() + this.height.toString();
+  } 
 }
