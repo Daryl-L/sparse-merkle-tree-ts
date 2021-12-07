@@ -7,7 +7,7 @@
     "moduleResolution": "Node",
     "outFile": "../../built/local/tsc.js",
     "sourceMap": true,
-    "target": "ES2016",
+    "target": "ES2017",
     "esModuleInterop": true,
     "types": [
       "mocha"

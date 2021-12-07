@@ -11,4 +11,5 @@ export interface Store {
     remove_branch(key: BranchKey): void;
     get_branch(key: BranchKey) : BranchNode;
     get_leaf(key: H256) : H256;
+    clone(): Store;
 }

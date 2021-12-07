@@ -38,6 +38,15 @@ export class H256 extends Uint8Array {
     this[Math.floor(height / 8)] |= 1 << (height % 8);
   }
 
+  to_array(): Array<u8> {
+    let arr = new Array;
+    this.forEach((v) => {
+      arr.push(v);
+    });
+
+    return arr;
+  }
+
   parent_path(height: u8): H256 {
     let start = height + 1;
     let start_byte = Math.floor(start / 8);

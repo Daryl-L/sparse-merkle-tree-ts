@@ -30,6 +30,12 @@ export class MergeValueWithZero implements MergeValue {
     zero_bits: H256;
     zero_count: u8;
 
+    constructor(base_node?: H256, zero_bits?: H256, zero_count?: u8) {
+        this.base_node = base_node;
+        this.zero_bits = zero_bits;
+        this.zero_count = zero_count;
+    }
+
     hash(): H256 {
         let hasher = blake2b(32, null, null, PERSONAL);
         hasher.update(new H256([MergeType.MergeWithZero]));

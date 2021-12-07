@@ -126,11 +126,11 @@ class SparseMerkleTree {
 
     let fork_height_stack = new Array<u8>();
     let stack_top = 0;
-    for (let i = 0; i < MAX_HEIGHT; i++) {
+    for (let i = 0; i < keys.length; i++) {
       let leaf_key = keys[i];
       let fork_height = i + 1 < keys.length ? leaf_key.fork_height(keys[i + 1]) : MAX_HEIGHT;
 
-      for (let height = 0; height <= fork_height; fork_height++) {
+      for (let height = 0; height <= fork_height; height++) {
         if (height == fork_height && i < keys.length) {
           break;
         }

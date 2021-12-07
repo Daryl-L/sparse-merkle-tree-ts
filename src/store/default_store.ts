@@ -12,6 +12,19 @@ export class DefaultStore implements Store {
     this.leaf_map = new Map;
   }
 
+  clone(): Store {
+    let clone = new DefaultStore;
+    this.branch_map.forEach((v, k) => {
+      clone.branch_map.set(k, v);
+    });
+
+    this.leaf_map.forEach((v, k) => {
+      clone.leaf_map.set(k, v);
+    })
+
+    return clone;
+  }
+
   insert_leaf(key: H256, value: H256) {
     this.leaf_map.set(key.toString(), value);
   }
