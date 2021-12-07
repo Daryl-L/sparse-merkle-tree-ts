@@ -6,14 +6,15 @@ import { u8 } from "./u8";
 import { H256 } from "./h256";
 import { DefaultStore } from "./store/default_store";
 import { BranchNode } from "./branch/node";
+import MerkleProof from "./merkle_proof";
 
 class SparseMerkleTree {
   store: Store;
   root: H256;
 
   constructor() {
-      this.store = new DefaultStore;
-      this.root = new H256(BYTE_NUMBER);
+    this.store = new DefaultStore;
+    this.root = new H256(BYTE_NUMBER);
   }
 
 
@@ -85,6 +86,77 @@ class SparseMerkleTree {
     this.update(key, new H256(32));
 
     return this.root;
+  }
+
+  /**
+   * fork_height: the largest height of two leaf nodes' public parent nodes which are adjacent leaf nodes.
+   * 
+   * @param keys 
+   * @returns 
+   */
+  merkle_proof(keys: Array<H256>): MerkleProof {
+    if (keys == null || keys.length <= 0) {
+      throw new Error('Empty keys.');
+    }
+
+    let proof = new MerkleProof;
+
+    keys = keys.sort();
+
+    keys.forEach((current_key) => {
+      let bitmap = H256.zero();
+
+      for (let height = 0; height < MAX_HEIGHT; height++) {
+        let parent_branch_node = this.store.get_branch(
+            new BranchKey(
+              height as u8, 
+              current_key.parent_path(height as u8),
+          ),
+        )
+
+        let sibling = current_key.is_right(height as u8) ? parent_branch_node.left : parent_branch_node.right;
+
+        if (!sibling.is_zero()) {
+          bitmap.set_bit(height as u8);
+        }
+      }
+
+      proof.leaves_bitmap.push(bitmap);
+    })
+
+    let fork_height_stack = new Array<u8>();
+    let stack_top = 0;
+    for (let i = 0; i < MAX_HEIGHT; i++) {
+      let leaf_key = keys[i];
+      let fork_height = i + 1 < keys.length ? leaf_key.fork_height(keys[i + 1]) : MAX_HEIGHT;
+
+      for (let height = 0; height <= fork_height; fork_height++) {
+        if (height == fork_height && i < keys.length) {
+          break;
+        }
+
+        if (stack_top > 0 && height == fork_height_stack[stack_top - 1]) {
+          stack_top--;
+        } else if (proof.leaves_bitmap[i].get_bit(height as u8) == 1) {
+          let parent_branch_node = this.store.get_branch(
+            new BranchKey(
+              height as u8,
+              leaf_key.parent_path(height as u8),
+            ),
+          );
+            
+          let sibling = leaf_key.is_right(height as u8) ? parent_branch_node.left : parent_branch_node.right;
+          if (!sibling.is_zero()) {
+            proof.branch_node.push(sibling);
+          }
+        }
+      }
+
+      fork_height_stack[stack_top] = fork_height;
+      stack_top++;
+    }
+
+    return proof;
   }
 }
 

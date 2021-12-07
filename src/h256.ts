@@ -1,4 +1,4 @@
-import { BYTE_NUMBER } from "./const";
+import { BYTE_NUMBER, MAX_HEIGHT } from "./const";
 import { u8 } from "./u8";
 
 export class H256 extends Uint8Array {
@@ -17,7 +17,21 @@ export class H256 extends Uint8Array {
   } 
 
   is_right(height: u8): boolean {
-    return (this[Math.floor(height / 8)] >> height % 8 & 0x1) == 0x1;
+    return this.get_bit(height) == 0x1;
+  }
+
+  get_bit(height: u8): 0|1 {
+      return (this[Math.floor(height / 8)] >> height % 8 & 0x1) as 0|1;
+  }
+
+  fork_height(next_key: H256): u8 {
+    for (let height = MAX_HEIGHT; height >= 0; height--) {
+      if (this.get_bit(height as u8) != next_key.get_bit(height as u8)) {
+        return height as u8;
+      }
+    }
+
+    return 0;
   }
 
   set_bit(height: u8) {
