@@ -30,3 +30,4 @@ console.log('0x' + Array.from(root).map(x => x.toString(16).padStart(2, '0')).jo
 let proof = tree.merkle_proof([auth_smt_key]);
 let compiled_proof = proof.compile([[auth_smt_key, auth_smt_value]]);
 console.log('0x' + compiled_proof.map(x => x.toString(16).padStart(2, '0')).join(''));
+console.log('0x' + Array.from(compiled_proof.compute_root([[auth_smt_key, auth_smt_value]])).map(x => x.toString(16).padStart(2, '0')).join(''));

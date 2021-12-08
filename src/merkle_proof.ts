@@ -115,9 +115,10 @@ class CompiledMerkleProof extends Array<u8> {
     let pc = 0;
 
     while (pc < this.length) {
-      let code = this[pc];
+      let code = this[pc++];
       let height: number, key: H256, value: MergeValue;
       let sibling: MergeValue, parent_key: H256, parent: MergeValue;
+      let zero_count: u8;
       switch (code) {
         case 0x4c:
           if (leaf_index >= leaves.length) {
@@ -125,6 +126,7 @@ class CompiledMerkleProof extends Array<u8> {
           }
           stack.push([0, leaves[leaf_index][0], from_h256(leaves[leaf_index][1])]);
           leaf_index++;
+          break;
         case 0x50:
           if (stack.length == 0) {
             throw new CorruptedStackError;
@@ -153,6 +155,7 @@ class CompiledMerkleProof extends Array<u8> {
           })()
 
           stack.push([height + 1, parent_key, parent]);
+          break;
         case 0x51:
           if (stack.length == 0) {
             throw new CorruptedStackError;
@@ -162,8 +165,8 @@ class CompiledMerkleProof extends Array<u8> {
             throw new CorruptedStackError;
           }
 
-          let zero_count = this[pc++];
-          let base_node = new H256(this.slice(pc, pc + 32));
+          zero_count = this[pc++];
+          let base_node = new H256(this.slice(pc, pc += 32));
           let zero_bits = new H256(this.slice(pc, pc += 32));
 
           [height, key, value] = stack.pop();
@@ -184,6 +187,7 @@ class CompiledMerkleProof extends Array<u8> {
           })()
 
           stack.push([height + 1, parent_key, parent]);
+          break;
         case 0x48:
           if (stack.length < 2) {
             throw new CorruptedStackError;
@@ -213,6 +217,7 @@ class CompiledMerkleProof extends Array<u8> {
           })()
 
           stack.push([height_a + 1, parent_key, parent])
+          break;
         case 0x4f:
           if (stack.length == 0) {
             throw new CorruptedStackError;
@@ -222,42 +227,42 @@ class CompiledMerkleProof extends Array<u8> {
             throw new CorruptedProofError
           }
 
-          let n = this[pc++];
+          let n = this[pc] == 0 ? 256 : this[pc++];
           [height, key, value] = stack.pop(); 
 
           if (height > MAX_HEIGHT) {
             throw new CorruptedProofError;
           }
 
-          for (let i = 0; i <= zero_count; i++) {
+          for (let i = 0; i < n; i++) {
             if (height + i > MAX_HEIGHT) {
               throw new CorruptedProofError;
             }
 
-            parent_key = key.parent_path(height + i as u8);
             value = ((height: u8): MergeValue => {
+              parent_key = key.parent_path(height);
               if (key.is_right(height as u8)) {
                 return merge(height as u8, parent_key, new MergeValueNormal(H256.zero()), value);
               } else {
                 return merge(height as u8, parent_key, value, new MergeValueNormal(H256.zero()));
               }
-            })(height + 1 as u8);
+            })(height + i as u8);
           }
 
-          stack.push([height, parent_key, value]);
+          stack.push([height + n, parent_key, value]);
       }
+    }
 
-      if (stack.length != 1) {
-        throw new CorruptedStackError;
-      }
+    if (stack.length != 1) {
+      throw new CorruptedStackError;
+    }
 
-      if (stack[0][0] != 256) {
-        throw new CorruptedProofError;
-      }
+    if (stack[0][0] != 256) {
+      throw new CorruptedProofError;
+    }
 
-      if (leaf_index != leaves.length) {
-        throw new CorruptedProofError;
-      }
+    if (leaf_index != leaves.length) {
+      throw new CorruptedProofError;
     }
 
     return stack[0][2].hash();

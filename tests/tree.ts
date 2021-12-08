@@ -107,12 +107,4 @@ import { IncorrectNumberOfLeaves } from '../src/errors/errors';
 //   assert.equal(tree.store.branch_map.values.toString(), store.branch_map.values.toString());
 // })
 
-describe('test', () => {
-  let key = new H256([123, 123, 160, 70, 172, 73, 233, 47, 58, 86, 26, 169, 7, 139, 141, 142, 194, 51, 53, 75, 133, 186, 80, 63, 243, 116, 158, 106, 254, 197, 98, 206]);
-  let value = new H256([201, 85, 97, 153, 164, 37, 67, 210, 159, 179, 112, 200, 201, 122, 186, 137, 37, 197, 211, 174, 115, 175, 153, 57, 215, 28, 184, 238, 65, 234, 89, 247]);
-  let tree= new SparseMerkleTree;
-  tree.update(key, value);
-  let proof = tree.merkle_proof(new Array<H256>(key));
-  let compiled_proof = proof.compile(new Array<[H256, H256]>([key, value]))
-  // assert.equal()
-})
+// describe('')
