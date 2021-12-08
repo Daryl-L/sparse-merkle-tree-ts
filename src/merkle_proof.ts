@@ -42,6 +42,8 @@ class MerkleProof {
       proof.push(0x4c);
       let zero_count = 0;
       for (let height = 0; height <= fork_height; height++) {
+        op_code = 0;
+        op_data = null;
         if (height == fork_height && i + 1 < leaves.length) {
           break;
         }
