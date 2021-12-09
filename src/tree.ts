@@ -7,6 +7,7 @@ import { H256 } from "./h256";
 import { DefaultStore } from "./store/default_store";
 import { BranchNode } from "./branch/node";
 import MerkleProof from "./merkle_proof";
+import { EmptyKeys } from "./errors/errors";
 
 class SparseMerkleTree {
   store: Store;
@@ -96,7 +97,7 @@ class SparseMerkleTree {
    */
   merkle_proof(keys: Array<H256>): MerkleProof {
     if (keys == null || keys.length <= 0) {
-      throw new Error('Empty keys.');
+      throw new EmptyKeys;
     }
 
     let proof = new MerkleProof;
