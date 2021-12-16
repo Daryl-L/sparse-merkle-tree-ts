@@ -18,6 +18,12 @@
     "allowJs": true
   },
   "scripts": {
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'"
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
+    "build": "tsc"
+  },
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "eslint": "^8.4.1",
+    "typescript": "^4.5.4"
   }
 }

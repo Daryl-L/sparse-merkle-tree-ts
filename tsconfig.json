@@ -5,14 +5,15 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "moduleResolution": "Node",
-    "outFile": "../../built/local/tsc.js",
     "sourceMap": true,
     "target": "ES2017",
     "esModuleInterop": true,
     "types": [
-      "mocha"
-    ]
+      "mocha",
+    ],
+    "declaration": true,
+    "outDir": "./dist"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules", "**/*.spec.ts", "dist"]
 }
