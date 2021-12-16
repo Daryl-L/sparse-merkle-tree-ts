@@ -20,8 +20,33 @@ yarn add sparse-merkle-tree-ts
 
 All branch nodes, branch keys and the leaf nodes are based on the `H256` class, which extends the `Uint8Array`.
 
+For the hasher, you can use your own implementation, just implements the `Hasher`.
+
 ```typescript
-import { H256, SparseMerkleTree } from '../lib'
+import { Blake2b } from '@nervosnetwork/ckb-sdk-utils/lib/crypto/blake2b';
+import { H256, Hasher, SparseMerkleTree } from '../lib'
+import * as util from '@nervosnetwork/ckb-sdk-utils';
+
+// your own implamentation of hasher.
+class Blake2bHasher extends Hasher {
+  hasher: Blake2b;
+
+  constructor() {
+    super();
+
+    this.hasher = util.blake2b(32, null, null, new TextEncoder().encode('ckb-default-hash'));
+  }
+
+  update(h: H256): this {
+    this.hasher.update(h);
+
+    return this; 
+  }
+
+  final(): H256 {
+    return new H256(this.hasher.final('binary') as Uint8Array);
+  }
+}
 
 let auth_smt_value = H256.zero();
 auth_smt_value[0] = 1;
@@ -41,17 +66,17 @@ let key_on_wl2 = new H256([
   0, 0,
 ]);
 
-let tree = new SparseMerkleTree;
+
+let tree = new SparseMerkleTree(() => new Blake2bHasher);
 tree.update(key_on_wl1, auth_smt_value);
 tree.update(key_on_wl2, auth_smt_value);
 tree.update(auth_smt_key, auth_smt_value);
 
 let root = tree.root;
+console.log('0x' + Array.from(root).map(x => x.toString(16).padStart(2, '0')).join(''));
 
 let proof = tree.merkle_proof([auth_smt_key]);
 let compiled_proof = proof.compile([[auth_smt_key, auth_smt_value]]);
-
-console.log('0x' + Array.from(root).map(x => x.toString(16).padStart(2, '0')).join(''));
 console.log('0x' + compiled_proof.map(x => x.toString(16).padStart(2, '0')).join(''));
 console.log('0x' + Array.from(compiled_proof.compute_root([[auth_smt_key, auth_smt_value]])).map(x => x.toString(16).padStart(2, '0')).join(''));
 ```
@@ -59,9 +84,9 @@ console.log('0x' + Array.from(compiled_proof.compute_root([[auth_smt_key, auth_s
 And you can see the output
 
 ```
-0xa4a156cd3d51cbd19db9b9925186f499e5484dcfd9210f89aaf5a85d936c6032
-0x4c4fa7519ff140d70605ba12fe535694399f37d59d586d4c25aaec63b47983d450974cbcee00000000000000000000000000000000000000000000000000000000000000004f58
-0xa4a156cd3d51cbd19db9b9925186f499e5484dcfd9210f89aaf5a85d936c6032
+0x4cfe0f79bec46e9b111b6ed4a87a301a2058d63b1cbf9867b581a2cbfebf8c02
+0x4c4fa7519f5613e03f3c0ed354d1491b0eb58705a091523f770bcecef276dd902d25d25e4100000000000000000000000000000000000000000000000000000000000000004f58
+0x4cfe0f79bec46e9b111b6ed4a87a301a2058d63b1cbf9867b581a2cbfebf8c02
 ```
 
 To verify the given root, just use
