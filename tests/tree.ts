@@ -107,4 +107,6 @@ import { IncorrectNumberOfLeaves } from '../src/errors/errors';
 //   assert.equal(tree.store.branch_map.values.toString(), store.branch_map.values.toString());
 // })
 
-// describe('')
+// describe('test sibling key get', () => {
+//   let tree = new SparseMerkleTree;
+// })
