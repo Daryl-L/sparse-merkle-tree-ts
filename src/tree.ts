@@ -8,14 +8,17 @@ import { DefaultStore } from "./store/default_store";
 import { BranchNode } from "./branch/node";
 import MerkleProof from "./merkle_proof";
 import { EmptyKeys } from "./errors/errors";
+import Hasher from "./hasher";
 
-class SparseMerkleTree {
+class SparseMerkleTree<H> {
   store: Store;
   root: H256;
+  hasherFactory: () => Hasher;
 
-  constructor() {
+  constructor(hasherFactory: () => Hasher) {
     this.store = new DefaultStore;
     this.root = new H256(BYTE_NUMBER);
+    this.hasherFactory = hasherFactory;
   }
 
 
@@ -76,7 +79,7 @@ class SparseMerkleTree {
       }
 
       current_key = parent_branch_key.key;
-      current_node = merge(height as u8, current_key, parent_branch_node.left, parent_branch_node.right);
+      current_node = merge(height as u8, current_key, parent_branch_node.left, parent_branch_node.right, this.hasherFactory);
     }
     this.root = current_node.hash();
 
@@ -100,7 +103,7 @@ class SparseMerkleTree {
       throw new EmptyKeys;
     }
 
-    let proof = new MerkleProof;
+    let proof = new MerkleProof(this.hasherFactory);
 
     keys = keys.sort();
 

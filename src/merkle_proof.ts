@@ -1,7 +1,9 @@
+import { Hash } from "crypto";
 import { BranchNode } from "./branch/node";
 import { MAX_HEIGHT } from "./const";
 import { CorruptedProofError, CorruptedStackError, EmptyKeys, IncorrectNumberOfLeaves } from "./errors/errors";
 import H256 from "./h256";
+import { HasherFactoryMethod } from "./hasher";
 import { MergeValue, MergeValueNormal, MergeValueWithZero } from "./merge/merge";
 import { from_h256, merge } from "./merge/util";
 import { u8 } from "./u8";
@@ -9,10 +11,12 @@ import { u8 } from "./u8";
 class MerkleProof {
   leaves_bitmap: Array<H256>;
   branch_node: Array<MergeValue>;
+  hasherFactory: HasherFactoryMethod;
 
-  constructor() {
+  constructor(hasherFactory: HasherFactoryMethod) {
     this.leaves_bitmap = new Array;
     this.branch_node = new Array;
+    this.hasherFactory = hasherFactory;
   }
 
   compute_root(leaves: Array<[H256, H256]>): H256 {
@@ -28,7 +32,7 @@ class MerkleProof {
 
     leaves.sort();
 
-    let proof = new CompiledMerkleProof;
+    let proof = new CompiledMerkleProof(this.hasherFactory);
     let fork_height_stack = new Array<u8>(257);
     let stack_top = 0;
     let branch_node_index = 0;
@@ -108,6 +112,13 @@ class MerkleProof {
 }
 
 class CompiledMerkleProof extends Array<u8> {
+  private hasherFactory: HasherFactoryMethod;
+
+  constructor(hasherFactory: HasherFactoryMethod) {
+    super();
+    this.hasherFactory = hasherFactory;
+  }
+
   compute_root(leaves: Array<[H256, H256]>): H256 {
     let stack: Array<[number, H256, MergeValue]> = new Array;
     leaves.sort();
@@ -148,9 +159,9 @@ class CompiledMerkleProof extends Array<u8> {
           parent_key = key.parent_path(height as u8);
           parent = ((): MergeValue => {
             if (key.is_right) {
-              return merge(height as u8, parent_key, sibling, value);
+              return merge(height as u8, parent_key, sibling, value, this.hasherFactory);
             } else {
-              return merge(height as u8, parent_key, value, sibling)
+              return merge(height as u8, parent_key, value, sibling, this.hasherFactory);
             }
           })()
 
@@ -176,13 +187,13 @@ class CompiledMerkleProof extends Array<u8> {
           }
 
           parent_key = key.parent_path(height as u8);
-          sibling = new MergeValueWithZero(base_node, zero_bits, zero_count);
+          sibling = new MergeValueWithZero(this.hasherFactory, base_node, zero_bits, zero_count);
 
           parent = ((): MergeValue => {
             if (key.is_right(height as u8)) {
-              return merge(height as u8, parent_key, sibling, value);
+              return merge(height as u8, parent_key, sibling, value, this.hasherFactory);
             } else {
-              return merge(height as u8, parent_key, value, sibling);
+              return merge(height as u8, parent_key, value, sibling, this.hasherFactory);
             }
           })()
 
@@ -210,9 +221,9 @@ class CompiledMerkleProof extends Array<u8> {
 
           parent = ((): MergeValue => {
             if (key_a.is_right(height_a as u8)) {
-              return merge(height_a as u8, parent_key, value_b, value_a);
+              return merge(height_a as u8, parent_key, value_b, value_a, this.hasherFactory);
             } else {
-              return merge(height_b as u8, parent_key, value_a, value_b);
+              return merge(height_b as u8, parent_key, value_a, value_b, this.hasherFactory);
             }
           })()
 
@@ -242,9 +253,9 @@ class CompiledMerkleProof extends Array<u8> {
             value = ((height: u8): MergeValue => {
               parent_key = key.parent_path(height);
               if (key.is_right(height as u8)) {
-                return merge(height as u8, parent_key, new MergeValueNormal(H256.zero()), value);
+                return merge(height as u8, parent_key, new MergeValueNormal(H256.zero()), value, this.hasherFactory);
               } else {
-                return merge(height as u8, parent_key, value, new MergeValueNormal(H256.zero()));
+                return merge(height as u8, parent_key, value, new MergeValueNormal(H256.zero()), this.hasherFactory);
               }
             })(height + i as u8);
           }

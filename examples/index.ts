@@ -1,4 +1,26 @@
-import { H256, SparseMerkleTree } from '../lib'
+import { Blake2b } from '@nervosnetwork/ckb-sdk-utils/lib/crypto/blake2b';
+import { H256, Hasher, SparseMerkleTree } from '../lib'
+import * as util from '@nervosnetwork/ckb-sdk-utils';
+
+class Blake2bHasher extends Hasher {
+  hasher: Blake2b;
+
+  constructor() {
+    super();
+
+    this.hasher = util.blake2b(32, null, null, new TextEncoder().encode('ckb-default-hash'));
+  }
+
+  update(h: H256): this {
+    this.hasher.update(h);
+
+    return this; 
+  }
+
+  final(): H256 {
+    return new H256(this.hasher.final('binary') as Uint8Array);
+  }
+}
 
 let auth_smt_value = H256.zero();
 auth_smt_value[0] = 1;
@@ -18,7 +40,8 @@ let key_on_wl2 = new H256([
   0, 0,
 ]);
 
-let tree = new SparseMerkleTree;
+
+let tree = new SparseMerkleTree(() => new Blake2bHasher);
 tree.update(key_on_wl1, auth_smt_value);
 tree.update(key_on_wl2, auth_smt_value);
 tree.update(auth_smt_key, auth_smt_value);
