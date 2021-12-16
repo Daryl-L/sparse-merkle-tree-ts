@@ -1,7 +1,7 @@
 import { BranchKey } from "../branch/key";
 import { BranchNode } from "../branch/node";
 import { Store } from "./store";
-import { H256 } from "../h256";
+import H256 from "../h256";
 
 export class DefaultStore implements Store {
   branch_map: Map<string, BranchNode>;

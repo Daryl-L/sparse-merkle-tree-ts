@@ -1,6 +1,6 @@
 import SparseMerkleTree from '../src/tree';
 import expect, { assert } from 'chai';
-import { H256 } from '../src/h256';
+import H256 from '../src/h256';
 import blake2b from '@nervosnetwork/ckb-sdk-utils/lib/crypto/blake2b';
 import MerkleProof from '../src/merkle_proof';
 import { IncorrectNumberOfLeaves } from '../src/errors/errors';

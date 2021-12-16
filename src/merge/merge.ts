@@ -1,6 +1,6 @@
 import blake2b from "@nervosnetwork/ckb-sdk-utils/lib/crypto/blake2b";
 import { PERSONAL } from '../const';
-import { H256 } from "../h256";
+import H256 from "../h256";
 import { u8 } from "../u8";
 import { MergeType } from './const';
 

@@ -1,7 +1,7 @@
 import { BranchNode } from "./branch/node";
 import { MAX_HEIGHT } from "./const";
 import { CorruptedProofError, CorruptedStackError, EmptyKeys, IncorrectNumberOfLeaves } from "./errors/errors";
-import { H256 } from "./h256";
+import H256 from "./h256";
 import { MergeValue, MergeValueNormal, MergeValueWithZero } from "./merge/merge";
 import { from_h256, merge } from "./merge/util";
 import { u8 } from "./u8";

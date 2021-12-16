@@ -89,6 +89,11 @@
   "resolved" "https://registry.npmmirror.com/@types/mocha/download/@types/mocha-9.0.0.tgz?cache=0&sync_timestamp=1637268124590&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fmocha%2Fdownload%2F%40types%2Fmocha-9.0.0.tgz"
   "version" "9.0.0"
 
+"@types/node@*", "@types/node@^17.0.0":
+  "integrity" "sha512-eMhwJXc931Ihh4tkU+Y7GiLzT/y/DBNpNtr4yU9O2w3SYBsr9NaOPhQlLKRmoWtI54uNwuo0IOUFQjVOTZYRvw=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-17.0.0.tgz"
+  "version" "17.0.0"
+
 "@ungap/promise-all-settled@1.1.2":
   "integrity" "sha1-qlgEJxHW4ydd033Fl+XTHowpCkQ="
   "resolved" "https://registry.nlark.com/@ungap/promise-all-settled/download/@ungap/promise-all-settled-1.1.2.tgz"

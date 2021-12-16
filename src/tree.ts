@@ -3,7 +3,7 @@ import { BYTE_NUMBER, MAX_HEIGHT } from "./const";
 import { from_h256, merge } from "./merge/util";
 import { Store } from "./store/store";
 import { u8 } from "./u8";
-import { H256 } from "./h256";
+import H256 from "./h256";
 import { DefaultStore } from "./store/default_store";
 import { BranchNode } from "./branch/node";
 import MerkleProof from "./merkle_proof";

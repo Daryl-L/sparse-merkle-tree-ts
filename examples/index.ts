@@ -1,5 +1,4 @@
-import { H256 } from "../src/h256";
-import SparseMerkleTree from "../src/tree";
+import { H256, SparseMerkleTree } from '../lib'
 
 let auth_smt_value = H256.zero();
 auth_smt_value[0] = 1;

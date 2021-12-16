@@ -1,6 +1,6 @@
 import * as util from '@nervosnetwork/ckb-sdk-utils'
 import { PERSONAL } from '../const';
-import { H256 } from '../h256';
+import H256 from '../h256';
 import { u8 } from '../u8';
 import { MergeType } from './const';
 import { MergeValue, MergeValueNormal, MergeValueWithZero } from './merge';

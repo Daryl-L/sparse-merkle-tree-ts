@@ -1,7 +1,7 @@
 import { BYTE_NUMBER, MAX_HEIGHT } from "./const";
 import { u8 } from "./u8";
 
-export class H256 extends Uint8Array {
+class H256 extends Uint8Array {
   static zero(): H256 {
     return new H256(BYTE_NUMBER);
   }
@@ -57,3 +57,5 @@ export class H256 extends Uint8Array {
     return clone;
   } 
 }
+
+export default H256;
