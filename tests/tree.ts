@@ -1,5 +1,5 @@
 import SparseMerkleTree from '../src/tree';
-import expect, { assert } from 'chai';
+import { assert } from 'chai';
 import H256 from '../src/h256';
 import blake2b, { Blake2b } from '@nervosnetwork/ckb-sdk-utils/lib/crypto/blake2b';
 import { Hasher } from '../src';
@@ -129,6 +129,34 @@ describe('test delete a leaf', () => {
   assert.equal(tree.store.branch_map.values.toString(), store.branch_map.values.toString());
 })
 
-// describe('test sibling key get', () => {
-//   let tree = new SparseMerkleTree;
-// })
+describe('test sibling key get', () => {
+  describe('get non exists sibling key should return zero value', () => {
+    let tree = new SparseMerkleTree(() => new Blake2bHasher);
+    let key = H256.zero();
+    let value = H256.zero();
+    value[0] = 1;
+    tree.update(key, value);
+
+    let sibling_key = H256.zero();
+    sibling_key[0] = 1;
+
+    assert.equal(H256.zero().toString(), tree.store.get_leaf(sibling_key).toString());
+  });
+
+  describe('get sibling key should return corresponding value', () => {
+    let tree = new SparseMerkleTree(() => new Blake2bHasher);
+    let key = H256.zero();
+    let value = H256.zero();
+    value[0] = 1;
+    tree.update(key, value);
+
+    let sibling_key = H256.zero();
+    sibling_key[0] = 1;
+    let sibling_value = H256.zero();
+    sibling_value[0] = 2;
+    tree.update(sibling_key, sibling_value);
+
+    assert.equal(value.toString(), tree.store.get_leaf(key).toString());
+    assert.equal(sibling_value.toString(), tree.store.get_leaf(sibling_key).toString());
+  })
+})

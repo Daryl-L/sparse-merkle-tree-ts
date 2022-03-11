@@ -38,7 +38,8 @@ export class DefaultStore implements Store {
     return this.branch_map.get(key.toString());
   }
   get_leaf(key: H256): H256 {
-    return this.leaf_map.get(key.toString());
+    let leaf = this.leaf_map.get(key.toString());
+    return leaf ? leaf : H256.zero();
   }
   remove_branch(key: BranchKey) {
     this.branch_map.delete(key.toString());
