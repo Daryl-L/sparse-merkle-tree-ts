@@ -1,6 +1,6 @@
 {
   "name": "sparse-merkle-tree-ts",
-  "version": "0.0.5",
+  "version": "0.5.1",
   "main": "lib/index.js",
   "repository": "git@github.com:Daryl-L/sparse-merkle-tree-ts.git",
   "author": "daryl",
