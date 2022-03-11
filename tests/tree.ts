@@ -6,6 +6,8 @@ import { Hasher } from '../src';
 import MerkleProof from '../src/merkle_proof';
 import { IncorrectNumberOfLeaves } from '../src/errors/errors';
 import { PERSONAL } from '../src/const';
+import * as jsc from 'jsverify';
+import { u8 } from '../src/u8';
 
 class Blake2bHasher extends Hasher {
   hasher: Blake2b;
@@ -159,4 +161,24 @@ describe('test sibling key get', () => {
     assert.equal(value.toString(), tree.store.get_leaf(key).toString());
     assert.equal(sibling_value.toString(), tree.store.get_leaf(sibling_key).toString());
   })
-})
+});
+
+describe('test constructor', () => {
+  jsc.property('insert same value to sibling key will construct a different root', jsc.nearray(jsc.uint8), jsc.nearray(jsc.uint8), (a, b) => {
+    let tree1 = new SparseMerkleTree(() => new Blake2bHasher);
+    let key = new H256(a);
+    let value = new H256(b);
+    tree1.update(key, value);
+
+    let sibling_key = key;
+    if (sibling_key.get_bit(0) == 1) {
+      sibling_key.clear_bit(0);
+    } else {
+      sibling_key.set_bit(0);
+    }
+
+    let tree2 = new SparseMerkleTree(() => new Blake2bHasher);
+
+    return tree1.getRoot.toString() != tree2.getRoot().toString();
+  });
+});

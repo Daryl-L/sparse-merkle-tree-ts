@@ -8,20 +8,24 @@ class H256 extends Uint8Array {
 
   is_zero(): boolean {
     for (const i of this) {
-        if (i != 0) {
-            return false;
-        }
+      if (i != 0) {
+        return false;
+      }
     }
 
     return true;
-  } 
+  }
 
   is_right(height: u8): boolean {
     return this.get_bit(height) == 0x1;
   }
 
-  get_bit(height: u8): 0|1 {
-      return (this[Math.floor(height / 8)] >> height % 8 & 0x1) as 0|1;
+  get_bit(height: u8): 0 | 1 {
+    return (this[Math.floor(height / 8)] >> height % 8 & 0x1) as 0 | 1;
+  }
+
+  clear_bit(height: u8) {
+    this[Math.floor(height / 8)] &= ~(1 << (height % 8));
   }
 
   fork_height(next_key: H256): u8 {
@@ -55,7 +59,7 @@ class H256 extends Uint8Array {
     clone[start_byte] &= (0xff << start % 8);
 
     return clone;
-  } 
+  }
 }
 
 export default H256;
