@@ -27,7 +27,7 @@ class SparseMerkleTree<H> {
    * 
    * @returns 
    */
-  getRoot() : H256 {
+  getRoot(): H256 {
     return this.root;
   }
 
@@ -112,16 +112,18 @@ class SparseMerkleTree<H> {
 
       for (let height = 0; height < MAX_HEIGHT; height++) {
         let parent_branch_node = this.store.get_branch(
-            new BranchKey(
-              height as u8, 
-              current_key.parent_path(height as u8),
+          new BranchKey(
+            height as u8,
+            current_key.parent_path(height as u8),
           ),
         )
 
-        let sibling = current_key.is_right(height as u8) ? parent_branch_node.left : parent_branch_node.right;
+        if (parent_branch_node) {
+          let sibling = current_key.is_right(height as u8) ? parent_branch_node.left : parent_branch_node.right;
 
-        if (!sibling.is_zero()) {
-          bitmap.set_bit(height as u8);
+          if (!sibling.is_zero()) {
+            bitmap.set_bit(height as u8);
+          }
         }
       }
 
@@ -148,7 +150,7 @@ class SparseMerkleTree<H> {
               leaf_key.parent_path(height as u8),
             ),
           );
-            
+
           let sibling = leaf_key.is_right(height as u8) ? parent_branch_node.left : parent_branch_node.right;
           if (!sibling.is_zero()) {
             proof.branch_node.push(sibling);

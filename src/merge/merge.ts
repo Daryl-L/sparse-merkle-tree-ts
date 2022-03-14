@@ -8,6 +8,7 @@ import { MergeType } from './const';
 export interface MergeValue {
     hash(): H256;
     is_zero(): boolean;
+    clone(): MergeValue;
 }
 
 export class MergeValueNormal implements MergeValue {
@@ -15,6 +16,10 @@ export class MergeValueNormal implements MergeValue {
 
     constructor(value: H256) {
         this.value = value;
+    }
+
+    clone(): MergeValue {
+        return new MergeValueNormal(new H256(this.value.to_array()));
     }
 
     hash(): H256 {
@@ -37,6 +42,14 @@ export class MergeValueWithZero implements MergeValue {
         this.zero_bits = zero_bits;
         this.zero_count = zero_count;
         this.hasherFactory = hasherFactory;
+    }
+
+    clone(): MergeValue {
+        return new MergeValueWithZero(this.hasherFactory,
+            new H256(this.base_node.to_array()),
+            new H256(this.zero_bits.to_array()),
+            this.zero_count,
+        );
     }
 
     hash(): H256 {

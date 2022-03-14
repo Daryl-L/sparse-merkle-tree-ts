@@ -19,6 +19,20 @@ class MerkleProof {
     this.hasherFactory = hasherFactory;
   }
 
+  clone(): MerkleProof {
+    let cloned = new MerkleProof(this.hasherFactory);
+
+    for (let v of this.leaves_bitmap) {
+      cloned.leaves_bitmap.push(new H256(v.to_array()));
+    }
+
+    for (let v of this.branch_node) {
+      cloned.branch_node.push(v.clone());
+    }
+
+    return cloned;
+  }
+
   compute_root(leaves: Array<[H256, H256]>): H256 {
     return this.compile(leaves).compute_root(leaves);
   }
@@ -41,7 +55,7 @@ class MerkleProof {
       let leaf_value = leaves[0][1];
       let fork_height = i + 1 < leaves.length ? leaf_key.fork_height(leaves[i + 1][0]) : MAX_HEIGHT;
       let op_code = 0;
-      let op_data:Array<u8> = null;
+      let op_data: Array<u8> = null;
 
       proof.push(0x4c);
       let zero_count = 0;
@@ -63,13 +77,13 @@ class MerkleProof {
             op_data = sibling.hash().to_array();
           } else if (sibling instanceof MergeValueWithZero) {
             op_code = 0x51;
-            op_data = new Array; 
+            op_data = new Array;
             op_data.push(sibling.zero_count);
             op_data.push(...sibling.base_node.to_array());
             op_data.push(...sibling.zero_bits.to_array());
           }
         } else {
-          zero_count++; 
+          zero_count++;
           if (zero_count > 256) {
             throw new CorruptedProofError;
           }
@@ -239,7 +253,7 @@ class CompiledMerkleProof extends Array<u8> {
           }
 
           let n = this[pc] == 0 ? 256 : this[pc++];
-          [height, key, value] = stack.pop(); 
+          [height, key, value] = stack.pop();
 
           if (height > MAX_HEIGHT) {
             throw new CorruptedProofError;
