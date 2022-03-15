@@ -229,7 +229,7 @@ class CompiledMerkleProof extends Array<u8> {
           }
 
           parent_key = key_a.parent_path(height_a as u8);
-          if (parent_key != key_b.parent_path(height_b as u8)) {
+          if (!parent_key.equal(key_b.parent_path(height_b as u8))) {
             throw new CorruptedProofError;
           }
 

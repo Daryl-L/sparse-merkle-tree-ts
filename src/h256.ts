@@ -6,6 +6,16 @@ class H256 extends Uint8Array {
     return new H256(BYTE_NUMBER);
   }
 
+  equal(a: H256): boolean {
+    for (let i = 0; i < BYTE_NUMBER; i++) {
+      if (this[i] != a[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   is_zero(): boolean {
     for (const i of this) {
       if (i != 0) {

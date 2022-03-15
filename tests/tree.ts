@@ -272,4 +272,28 @@ describe('test sparse merkle tree', function () {
     assert.notEqual(proof.clone().compute_root([[key1, H256.zero()]]).toString(), tree.getRoot().toString());
     assert.notEqual(compiled_proof.compute_root([[key1, H256.zero()]]).toString(), tree.getRoot().toString());
   });
+
+  jsc.property('test sibling leaf', jsc.nearray(jsc.uint8), jsc.nearray(jsc.uint8), jsc.nearray(jsc.uint8), (a, b, c) => {
+    let key = new H256(a);
+    let sibling_key = new H256(a);
+    let value = new H256(b);
+    let sibling_value = new H256(c);
+
+    if (key.is_right(0)) {
+      sibling_key.clear_bit(0);
+    } else {
+      sibling_key.set_bit(0);
+    }
+
+    let tree = new SparseMerkleTree(() => new Blake2bHasher);
+    tree.update(key, value);
+    tree.update(sibling_key, sibling_value);
+
+    let proof = tree.merkle_proof([key, sibling_key]);
+    proof.compute_root([[key, value], [sibling_key, sibling_value]])
+    // console.log(key, sibling_key);
+    // assert.equal(proof.compute_root([[key, value], [sibling_key, sibling_value]]).toString(), tree.getRoot().toString());
+
+    return true;
+  });
 });
