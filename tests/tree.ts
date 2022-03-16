@@ -290,9 +290,7 @@ describe('test sparse merkle tree', function () {
     tree.update(sibling_key, sibling_value);
 
     let proof = tree.merkle_proof([key, sibling_key]);
-    proof.compute_root([[key, value], [sibling_key, sibling_value]])
-    // console.log(key, sibling_key);
-    // assert.equal(proof.compute_root([[key, value], [sibling_key, sibling_value]]).toString(), tree.getRoot().toString());
+    assert.equal(proof.compute_root([[key, value], [sibling_key, sibling_value]]).toString(), tree.getRoot().toString());
 
     return true;
   });

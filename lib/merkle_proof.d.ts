@@ -7,6 +7,7 @@ declare class MerkleProof {
     branch_node: Array<MergeValue>;
     hasherFactory: HasherFactoryMethod;
     constructor(hasherFactory: HasherFactoryMethod);
+    clone(): MerkleProof;
     compute_root(leaves: Array<[H256, H256]>): H256;
     compile(leaves: Array<[H256, H256]>): CompiledMerkleProof;
 }
